@@ -3,10 +3,11 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { HeartHandshake, Menu, X, Shield } from 'lucide-react';
+import { HeartHandshake, Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
+import { useUser } from '@/firebase';
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -20,6 +21,7 @@ export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
+  const { user } = useUser();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -62,9 +64,17 @@ export default function Header() {
           {navLinks.map((link) => (
             <NavLink key={link.href} {...link} />
           ))}
-           <NavLink href="/admin" label="Admin" icon={Shield} />
         </nav>
         <div className="flex items-center gap-4">
+           {user ? (
+             <Button asChild variant="outline">
+                <Link href="/profile">Profile</Link>
+             </Button>
+           ) : (
+             <Button asChild variant="outline">
+                <Link href="/login">Login</Link>
+            </Button>
+           )}
           <Button asChild className="hidden md:flex" style={{backgroundColor: "var(--accent)", color: "var(--accent-foreground)"}}>
             <Link href="/donate">Donate Now</Link>
           </Button>
@@ -78,7 +88,7 @@ export default function Header() {
             <SheetContent side="right" className="w-[300px] sm:w-[400px]">
               <div className="p-4">
                 <div className="flex justify-between items-center mb-8">
-                   <Link href="/" className="flex items-center gap-2">
+                   <Link href="/" className="flex items-center gap-2" onClick={() => setIsMobileMenuOpen(false)}>
                       <HeartHandshake className="h-6 w-6 text-accent" />
                       <span className="font-headline text-xl font-bold">Puratani</span>
                     </Link>
@@ -90,7 +100,6 @@ export default function Header() {
                   {navLinks.map((link) => (
                     <NavLink key={link.href} {...link} />
                   ))}
-                  <NavLink href="/admin" label="Admin" icon={Shield} />
                   <Button asChild size="lg" className="mt-4" style={{backgroundColor: "var(--accent)", color: "var(--accent-foreground)"}}>
                      <Link href="/donate">Donate Now</Link>
                   </Button>

@@ -1,5 +1,5 @@
-
 'use client';
+import { useAdmin } from '@/components/admin-provider';
 import {
   Sidebar,
   SidebarContent,
@@ -12,22 +12,54 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from '@/components/ui/sidebar';
-import { LayoutDashboard, Newspaper, HeartHandshake } from 'lucide-react';
+import { LayoutDashboard, Newspaper, HeartHandshake, LogOut, Shield } from 'lucide-react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import { useEffect } from 'react';
+import { useAuth } from '@/firebase';
 
 const AdminLayout = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
+  const { isAdmin, isCheckingAdmin } = useAdmin();
+  const router = useRouter();
+  const auth = useAuth();
+
+  useEffect(() => {
+    if (!isCheckingAdmin && !isAdmin) {
+      router.push('/login');
+    }
+  }, [isAdmin, isCheckingAdmin, router]);
 
   const isActive = (path: string) => pathname === path;
+
+  if (isCheckingAdmin || !isAdmin) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <div className="flex items-center gap-2">
+            <Shield className="h-6 w-6 animate-spin" />
+            <p>Verifying access...</p>
+        </div>
+      </div>
+    );
+  }
+
+  const handleLogout = () => {
+    auth.signOut();
+    router.push('/');
+  }
 
   return (
     <SidebarProvider>
       <Sidebar>
         <SidebarHeader>
-            <div className="flex items-center gap-2 p-2">
-                 <HeartHandshake className="h-6 w-6 text-accent" />
-                 <span className="font-headline text-xl font-bold">Admin</span>
+            <div className="flex items-center justify-between p-2">
+                <div className="flex items-center gap-2">
+                    <HeartHandshake className="h-6 w-6 text-accent" />
+                    <span className="font-headline text-xl font-bold">Admin</span>
+                </div>
+                <Button variant="ghost" size="icon" onClick={handleLogout} className="text-muted-foreground">
+                    <LogOut className="h-5 w-5" />
+                </Button>
             </div>
         </SidebarHeader>
         <SidebarContent>
@@ -63,8 +95,12 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
       </Sidebar>
       <SidebarInset>
          <div className="p-4 md:p-8">
-          <div className="md:hidden mb-4">
+          <div className="md:hidden mb-4 flex justify-between items-center">
              <SidebarTrigger />
+             <Button variant="ghost" size="sm" onClick={handleLogout}>
+                <LogOut className="mr-2 h-4 w-4" />
+                Logout
+            </Button>
           </div>
           {children}
         </div>
