@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { HeartHandshake, Menu, X } from 'lucide-react';
+import { HeartHandshake, Menu, X, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
@@ -29,17 +29,18 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const NavLink = ({ href, label }: { href: string; label: string }) => {
+  const NavLink = ({ href, label, icon: Icon }: { href: string; label: string; icon?: React.ElementType }) => {
     const isActive = pathname === href;
     return (
       <Link
         href={href}
         onClick={() => setIsMobileMenuOpen(false)}
         className={cn(
-          "text-sm font-medium transition-colors hover:text-accent",
+          "text-sm font-medium transition-colors hover:text-accent flex items-center gap-2",
           isActive ? "text-accent" : "text-foreground/80"
         )}
       >
+        {Icon && <Icon className="h-4 w-4" />}
         {label}
       </Link>
     );
@@ -61,6 +62,7 @@ export default function Header() {
           {navLinks.map((link) => (
             <NavLink key={link.href} {...link} />
           ))}
+           <NavLink href="/admin" label="Admin" icon={Shield} />
         </nav>
         <div className="flex items-center gap-4">
           <Button asChild className="hidden md:flex" style={{backgroundColor: "var(--accent)", color: "var(--accent-foreground)"}}>
@@ -88,6 +90,7 @@ export default function Header() {
                   {navLinks.map((link) => (
                     <NavLink key={link.href} {...link} />
                   ))}
+                  <NavLink href="/admin" label="Admin" icon={Shield} />
                   <Button asChild size="lg" className="mt-4" style={{backgroundColor: "var(--accent)", color: "var(--accent-foreground)"}}>
                      <Link href="/donate">Donate Now</Link>
                   </Button>
