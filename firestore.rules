@@ -1,0 +1,162 @@
+/**
+ * @file Firestore Security Rules
+ * @description This ruleset enforces a strict user-ownership model for user profiles and leverages an admin role stored in a separate collection.
+ *
+ * Data Structure:
+ * - /user_profiles/{userId}: User profile data, accessible only to the owning user and admins.
+ * - /causes/{causeId}: Cause data, publicly readable but only writable by admins.
+ * - /donations/{donationId}: Donation data, readable by the donating user and admins.
+ * - /blog_posts/{blogPostId}: Blog post data, publicly readable but only writable by admins.
+ * - /roles_admin/{userId}:  Existence-based admin roles. If a document exists for a user, they are an admin.
+ *
+ * Key Security Decisions:
+ * - User profiles are strictly owned by the user, enforced via path-based matching.
+ * - Public read access is granted to causes and blog posts.
+ * - Administrative privileges are determined by the existence of a document in the `/roles_admin/{userId}` collection.
+ * - Listing of user profiles is disallowed to prevent data scraping.
+ *
+ * Denormalization for Authorization:
+ * - Admin status is checked via the existence of a document in `/roles_admin/{userId}`, avoiding the need to store admin status in user profiles and preventing costly `get()` calls during rule evaluation.
+ */
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /**
+     * @description Checks if the request is made by an authenticated user.
+     * @return {boolean} True if the user is signed in, false otherwise.
+     */
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    /**
+     * @description Checks if the request is made by the owner of the user profile.
+     * @param {string} userId - The user ID to check against.
+     * @return {boolean} True if the user ID matches the authenticated user's UID, false otherwise.
+     */
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    /**
+     * @description Checks if the request is made by an existing owner of the user profile.
+     * @param {string} userId - The user ID to check against.
+     * @return {boolean} True if the user ID matches the authenticated user's UID and the resource exists, false otherwise.
+     */
+    function isExistingOwner(userId) {
+      return isOwner(userId) && resource != null;
+    }
+
+    /**
+     * @description Checks if the user is an admin by verifying the existence of a document in the roles_admin collection.
+     * @return {boolean} True if the user is an admin, false otherwise.
+     */
+    function isAdmin() {
+      return exists(/databases/$(database)/documents/roles_admin/$(request.auth.uid));
+    }
+
+    /**
+     * @description Rules for /user_profiles/{userProfileId}
+     * @path /user_profiles/{userProfileId}
+     * @allow (create) - An authenticated user can create their own profile if the userProfileId matches their UID.
+     * @allow (get) - An authenticated user can read their own profile or an admin can read any profile.
+     * @allow (update) - An authenticated user can update their own profile or an admin can update any profile.
+     * @allow (delete) - An authenticated user can delete their own profile or an admin can delete any profile.
+     * @deny (create) - A user cannot create a profile for another user (userProfileId does not match their UID).
+     * @deny (list) - Listing user profiles is disallowed.
+     * @principle Enforces document ownership for writes, restricts listing to prevent data scraping.
+     */
+    match /user_profiles/{userProfileId} {
+      // Read Rules
+      allow get: if isOwner(userProfileId) || isAdmin();
+      allow list: if false;
+
+      // Write Rules
+      allow create: if isOwner(userProfileId) && request.resource.data.id == userProfileId;
+      allow update: if isExistingOwner(userProfileId) && request.resource.data.id == resource.data.id || isAdmin();
+      allow delete: if isExistingOwner(userProfileId) || isAdmin();
+    }
+
+    /**
+     * @description Rules for /causes/{causeId}
+     * @path /causes/{causeId}
+     * @allow (get, list) - Anyone can read causes.
+     * @allow (create, update, delete) - Only admins can create, update, or delete causes.
+     * @deny (create, update, delete) - Non-admins cannot create, update, or delete causes.
+     * @principle Public read access with admin-only writes.
+     */
+    match /causes/{causeId} {
+      // Read Rules
+      allow get: if true;
+      allow list: if true;
+
+      // Write Rules
+      allow create: if isAdmin();
+      allow update: if isAdmin() && resource != null;
+      allow delete: if isAdmin() && resource != null;
+    }
+
+    /**
+     * @description Rules for /donations/{donationId}
+     * @path /donations/{donationId}
+     * @allow (get) - An authenticated user can read a donation if they are the owner or an admin.
+     * @allow (list) - Listing donations is only allowed for admins.
+     * @allow (create) - An authenticated user can create a donation.
+     * @allow (update, delete) - Only the admin can update or delete a donation.
+     * @deny (create) - A user cannot create a donation for another user.
+     * @principle Restricts write access to admins and the creating user, restricts listing to admins.
+     */
+    match /donations/{donationId} {
+      // Read Rules
+      allow get: if isSignedIn() && resource.data.userProfileId == request.auth.uid || isAdmin();
+      allow list: if isAdmin();
+
+      // Write Rules
+      allow create: if isSignedIn() && request.resource.data.userProfileId == request.auth.uid;
+      allow update: if isAdmin() && resource != null;
+      allow delete: if isAdmin() && resource != null;
+    }
+
+    /**
+     * @description Rules for /blog_posts/{blogPostId}
+     * @path /blog_posts/{blogPostId}
+     * @allow (get, list) - Anyone can read blog posts.
+     * @allow (create, update, delete) - Only admins can create, update, or delete blog posts.
+     * @deny (create, update, delete) - Non-admins cannot create, update, or delete blog posts.
+     * @principle Public read access with admin-only writes.
+     */
+    match /blog_posts/{blogPostId} {
+      // Read Rules
+      allow get: if true;
+      allow list: if true;
+
+      // Write Rules
+      allow create: if isAdmin();
+      allow update: if isAdmin() && resource != null;
+      allow delete: if isAdmin() && resource != null;
+    }
+
+    /**
+     * @description Rules for /roles_admin/{userId}
+     * @path /roles_admin/{userId}
+     * @allow (get) - Only admins can check for other admins.
+     * @allow (create) - Only admins can create new admin roles.
+     * @allow (update) - Updating an admin document is disallowed.
+     * @allow (delete) - Only admins can remove admin roles.
+     * @allow (list) - Listing admin roles is disallowed.
+     * @deny (create, get, update, delete) - Non-admins cannot manage admin roles.
+     * @principle Admin-only access to manage admin roles, existence-based role verification.
+     */
+    match /roles_admin/{userId} {
+      // Read Rules
+      allow get: if isAdmin();
+      allow list: if false;
+
+      // Write Rules
+      allow create: if isAdmin();
+      allow update: if false;
+      allow delete: if isAdmin() && resource != null;
+    }
+  }
+}
