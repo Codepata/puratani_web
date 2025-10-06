@@ -32,18 +32,18 @@ export default function Header() {
   }, []);
 
   const NavLink = ({ href, label, icon: Icon }: { href: string; label: string; icon?: React.ElementType }) => {
-    const isActive = pathname === href;
+    const isActive = (pathname === '/' && href === '/') || (href !== '/' && pathname.startsWith(href));
     return (
       <Link
         href={href}
         onClick={() => setIsMobileMenuOpen(false)}
         className={cn(
-          "text-sm font-medium transition-colors hover:text-accent flex items-center gap-2",
+          "text-sm font-medium transition-colors hover:text-accent flex items-center gap-2 relative",
           isActive ? "text-accent" : "text-foreground/80"
         )}
       >
-        {Icon && <Icon className="h-4 w-4" />}
         {label}
+         {isActive && <span className="absolute -bottom-1 left-0 w-full h-0.5 bg-accent"></span>}
       </Link>
     );
   };
@@ -52,7 +52,7 @@ export default function Header() {
     <header
       className={cn(
         'sticky top-0 z-50 w-full transition-all duration-300',
-        isScrolled ? 'border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60' : 'bg-background/0'
+        isScrolled ? 'border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-md' : 'bg-transparent'
       )}
     >
       <div className="container flex h-16 items-center justify-between">
@@ -60,7 +60,7 @@ export default function Header() {
           <HeartHandshake className="h-6 w-6 text-accent" />
           <span className="font-headline text-xl font-bold">Puratani</span>
         </Link>
-        <nav className="hidden items-center gap-6 md:flex">
+        <nav className="hidden items-center gap-8 md:flex">
           {navLinks.map((link) => (
             <NavLink key={link.href} {...link} />
           ))}

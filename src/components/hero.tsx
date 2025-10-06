@@ -23,10 +23,10 @@ const Hero = () => {
         <h1 className="font-headline text-4xl md:text-6xl lg:text-7xl font-bold leading-tight animate-fade-in-up">
           Rediscover Hope, Rebuild Futures
         </h1>
-        <p className="mt-4 max-w-2xl text-lg md:text-xl text-primary-foreground/80 animate-fade-in-up [animation-delay:200ms]">
+        <p className="mt-4 max-w-2xl text-lg md:text-xl text-primary-foreground/80 animate-fade-in-up" style={{animationDelay: '200ms'}}>
           Puratani is a collective memory, a shared nostalgia for a time of compassion. Join us in turning that nostalgia into action for a better world.
         </p>
-        <div className="mt-8 flex flex-col sm:flex-row gap-4 animate-fade-in-up [animation-delay:400ms]">
+        <div className="mt-8 flex flex-col sm:flex-row gap-4 animate-fade-in-up" style={{animationDelay: '400ms'}}>
           <Button asChild size="lg" style={{backgroundColor: "var(--accent)", color: "var(--accent-foreground)"}} className="hover:opacity-90">
             <Link href="/donate">Donate Now</Link>
           </Button>
