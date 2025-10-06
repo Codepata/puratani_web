@@ -14,22 +14,11 @@ const AdminContext = createContext<AdminContextType>({
 });
 
 export const AdminProvider = ({ children }: { children: ReactNode }) => {
-  const auth = useAuth();
-  const [user, setUser] = useState(auth.currentUser);
-  const [isUserLoading, setIsUserLoading] = useState(true);
+  const { user, isUserLoading } = useAuth();
   
   const [isAdmin, setIsAdmin] = useState(false);
   const [isCheckingAdmin, setIsCheckingAdmin] = useState(true);
   const firestore = useFirestore();
-
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      setUser(user);
-      setIsUserLoading(false);
-    });
-
-    return () => unsubscribe();
-  }, [auth]);
 
 
   useEffect(() => {

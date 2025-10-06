@@ -32,7 +32,7 @@ export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
   const auth = useAuth();
-  const [user, setUser] = useState<User | null>(auth.currentUser);
+  const { user } = useAuth();
   const router = useRouter();
 
 
@@ -42,13 +42,10 @@ export default function Header() {
     };
     window.addEventListener('scroll', handleScroll);
     
-    const unsubscribe = auth.onAuthStateChanged(setUser);
-
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      unsubscribe();
     }
-  }, [auth]);
+  }, []);
   
   const handleLogout = async () => {
     await auth.signOut();

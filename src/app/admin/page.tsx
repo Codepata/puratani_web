@@ -1,51 +1,106 @@
+'use client';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Newspaper, HeartHandshake, Users } from 'lucide-react';
+import { Newspaper, HeartHandshake, Users, PlusCircle, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
+import { useAdmin } from '@/components/admin-provider';
+import { useAuth } from '@/firebase';
+import { blogPosts } from '@/lib/data';
+import { causes } from '@/lib/data';
 
 export default function AdminDashboard() {
+  const { user } = useAuth();
+  const latestPosts = blogPosts.slice(0, 3);
+
   return (
     <div>
-      <h1 className="text-3xl font-bold mb-6 font-headline">Admin Dashboard</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold font-headline">Welcome, {user?.displayName || 'Admin'}!</h1>
+        <p className="text-muted-foreground">Here's a snapshot of your platform.</p>
+      </div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Newspaper className="h-6 w-6" />
-              Manage Blog
+            <CardTitle className="flex items-center justify-between">
+              <span>Blog Posts</span>
+              <Newspaper className="h-6 w-6 text-muted-foreground" />
             </CardTitle>
-            <CardDescription>Create, edit, and delete blog posts.</CardDescription>
+            <CardDescription>Total number of published articles.</CardDescription>
           </CardHeader>
           <CardContent>
-            <Button asChild>
-              <Link href="/admin/blog">Go to Blog</Link>
-            </Button>
+            <p className="text-4xl font-bold">{blogPosts.length}</p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <HeartHandshake className="h-6 w-6" />
-              Manage Causes
+            <CardTitle className="flex items-center justify-between">
+              <span>Causes</span>
+              <HeartHandshake className="h-6 w-6 text-muted-foreground" />
             </CardTitle>
-            <CardDescription>Update and track your fundraising causes.</CardDescription>
+            <CardDescription>Total number of fundraising causes.</CardDescription>
           </CardHeader>
           <CardContent>
-            <Button asChild>
-              <Link href="/admin/causes">Go to Causes</Link>
-            </Button>
+            <p className="text-4xl font-bold">{causes.length}</p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Users className="h-6 w-6" />
-              Manage Users
+            <CardTitle className="flex items-center justify-between">
+              <span>Users</span>
+              <Users className="h-6 w-6 text-muted-foreground" />
             </CardTitle>
-            <CardDescription>View and manage user accounts.</CardDescription>
+            <CardDescription>Total registered users.</CardDescription>
           </CardHeader>
           <CardContent>
-            <Button disabled>Coming Soon</Button>
+            <p className="text-4xl font-bold">125</p>
+            <p className="text-xs text-muted-foreground mt-1">(Sample data)</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Quick Actions</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center justify-between p-3 bg-card rounded-lg border">
+                <div>
+                    <h3 className="font-semibold">Manage Blog Posts</h3>
+                    <p className="text-sm text-muted-foreground">Create, edit, or delete posts.</p>
+                </div>
+                <Button asChild>
+                    <Link href="/admin/blog"><ExternalLink className="mr-2 h-4 w-4"/>View All</Link>
+                </Button>
+            </div>
+             <div className="flex items-center justify-between p-3 bg-card rounded-lg border">
+                <div>
+                    <h3 className="font-semibold">Manage Causes</h3>
+                    <p className="text-sm text-muted-foreground">Update and track fundraising.</p>
+                </div>
+                <Button asChild>
+                    <Link href="/admin/causes"><ExternalLink className="mr-2 h-4 w-4"/>View All</Link>
+                </Button>
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Recent Activity</CardTitle>
+            <CardDescription>Latest blog posts published.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ul className="space-y-3">
+              {latestPosts.map(post => (
+                <li key={post.id} className="flex items-center justify-between text-sm">
+                  <Link href={`/blog/${post.id}`} className="hover:underline" target="_blank">
+                    {post.title}
+                  </Link>
+                  <span className="text-xs text-muted-foreground">{post.date}</span>
+                </li>
+              ))}
+            </ul>
           </CardContent>
         </Card>
       </div>
