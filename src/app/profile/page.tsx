@@ -1,16 +1,13 @@
+'use client';
+
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { Edit, LogOut, Gift } from 'lucide-react';
-
-const user = {
-  name: 'Alex Doe',
-  email: 'alex.doe@example.com',
-  joined: 'October 2023',
-  avatarId: 'profile-avatar',
-};
+import { useAuth, useUser } from '@/firebase';
+import { useRouter } from 'next/navigation';
+import { Edit, LogOut, Gift, User as UserIcon } from 'lucide-react';
+import { useEffect } from 'react';
 
 const donationHistory = [
   { id: 1, cause: 'Education for Children', amount: 50, date: '2023-10-15' },
@@ -19,7 +16,39 @@ const donationHistory = [
 ];
 
 export default function ProfilePage() {
-    const avatarImage = PlaceHolderImages.find((img) => img.id === user.avatarId);
+  const { user, isUserLoading } = useUser();
+  const auth = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isUserLoading && !user) {
+      router.push('/login');
+    }
+  }, [user, isUserLoading, router]);
+
+  const handleLogout = async () => {
+    await auth.signOut();
+    router.push('/');
+  };
+
+  if (isUserLoading || !user) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <div className="flex items-center gap-2">
+            <UserIcon className="h-6 w-6 animate-spin" />
+            <p>Loading profile...</p>
+        </div>
+      </div>
+    );
+  }
+
+  const getInitials = (name: string | null | undefined) => {
+    return name ? name.split(' ').map(n => n[0]).join('') : '';
+  };
+  
+  const formatDate = (date: Date) => {
+    return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long' });
+  }
 
   return (
     <div className="bg-background">
@@ -27,20 +56,20 @@ export default function ProfilePage() {
         <div className="max-w-4xl mx-auto">
           <div className="flex flex-col md:flex-row items-center gap-6 md:gap-8 mb-12">
             <Avatar className="h-24 w-24 md:h-32 md:w-32 border-4 border-card">
-              {avatarImage && <AvatarImage src={avatarImage.imageUrl} alt={user.name} data-ai-hint={avatarImage.imageHint} />}
-              <AvatarFallback className="text-4xl">{user.name.charAt(0)}</AvatarFallback>
+              {user.photoURL && <AvatarImage src={user.photoURL} alt={user.displayName || 'User'} />}
+              <AvatarFallback className="text-4xl">{getInitials(user.displayName)}</AvatarFallback>
             </Avatar>
             <div className="text-center md:text-left">
-              <h1 className="font-headline text-4xl font-bold">{user.name}</h1>
+              <h1 className="font-headline text-4xl font-bold">{user.displayName || 'Anonymous User'}</h1>
               <p className="text-muted-foreground mt-1">{user.email}</p>
-              <p className="text-sm text-muted-foreground mt-2">Member since {user.joined}</p>
+              {user.metadata.creationTime && <p className="text-sm text-muted-foreground mt-2">Member since {formatDate(new Date(user.metadata.creationTime))}</p>}
             </div>
             <div className="md:ml-auto flex gap-2">
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" disabled>
                 <Edit className="mr-2 h-4 w-4" />
                 Edit Profile
               </Button>
-              <Button variant="ghost" size="sm">
+              <Button variant="ghost" size="sm" onClick={handleLogout}>
                 <LogOut className="mr-2 h-4 w-4" />
                 Logout
               </Button>

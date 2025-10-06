@@ -14,11 +14,6 @@ const AdminContext = createContext<AdminContextType>({
   isCheckingAdmin: true,
 });
 
-// For this example, we will hardcode the admin emails.
-// In a production app, you would fetch this from a secure source
-// or manage roles in Firestore.
-const ADMIN_EMAILS = ['test@example.com', 'admin@example.com'];
-
 export const AdminProvider = ({ children }: { children: ReactNode }) => {
   const { user, isUserLoading } = useUser();
   const [isAdmin, setIsAdmin] = useState(false);
@@ -42,7 +37,7 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
         const adminRoleRef = doc(firestore, 'roles_admin', user.uid);
         const adminRoleDoc = await getDoc(adminRoleRef);
         
-        if (adminRoleDoc.exists() || (user.email && ADMIN_EMAILS.includes(user.email))) {
+        if (adminRoleDoc.exists()) {
             setIsAdmin(true);
         } else {
             setIsAdmin(false);
