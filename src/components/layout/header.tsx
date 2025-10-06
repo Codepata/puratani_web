@@ -7,11 +7,11 @@ import { HeartHandshake, Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
-import { useUser } from '@/firebase';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { useAuth } from '@/firebase';
 import { useRouter } from 'next/navigation';
+import type { User } from 'firebase/auth';
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -31,8 +31,8 @@ export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
-  const { user } = useUser();
   const auth = useAuth();
+  const [user, setUser] = useState<User | null>(auth.currentUser);
   const router = useRouter();
 
 
@@ -41,8 +41,14 @@ export default function Header() {
       setIsScrolled(window.scrollY > 10);
     };
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    
+    const unsubscribe = auth.onAuthStateChanged(setUser);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      unsubscribe();
+    }
+  }, [auth]);
   
   const handleLogout = async () => {
     await auth.signOut();

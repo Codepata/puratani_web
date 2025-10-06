@@ -1,6 +1,6 @@
 'use client';
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { useUser, useFirestore, errorEmitter, FirestorePermissionError } from '@/firebase';
+import { useAuth, useFirestore, errorEmitter, FirestorePermissionError } from '@/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 
 interface AdminContextType {
@@ -14,10 +14,23 @@ const AdminContext = createContext<AdminContextType>({
 });
 
 export const AdminProvider = ({ children }: { children: ReactNode }) => {
-  const { user, isUserLoading } = useUser();
+  const auth = useAuth();
+  const [user, setUser] = useState(auth.currentUser);
+  const [isUserLoading, setIsUserLoading] = useState(true);
+  
   const [isAdmin, setIsAdmin] = useState(false);
   const [isCheckingAdmin, setIsCheckingAdmin] = useState(true);
   const firestore = useFirestore();
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      setUser(user);
+      setIsUserLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, [auth]);
+
 
   useEffect(() => {
     const checkAdminStatus = async () => {
@@ -34,23 +47,19 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
       setIsCheckingAdmin(true);
       const adminRoleRef = doc(firestore, 'roles_admin', user.uid);
       
-      getDoc(adminRoleRef)
-        .then((adminRoleDoc) => {
-            setIsAdmin(adminRoleDoc.exists());
-        })
-        .catch((serverError) => {
-            // Create a rich, contextual error.
-            const permissionError = new FirestorePermissionError({
-              path: adminRoleRef.path,
-              operation: 'get',
-            });
-            // Emit the error to be caught by the global error listener.
-            errorEmitter.emit('permission-error', permissionError);
-            setIsAdmin(false);
-        })
-        .finally(() => {
-            setIsCheckingAdmin(false);
+      try {
+        const adminRoleDoc = await getDoc(adminRoleRef);
+        setIsAdmin(adminRoleDoc.exists());
+      } catch (serverError) {
+        const permissionError = new FirestorePermissionError({
+          path: adminRoleRef.path,
+          operation: 'get',
         });
+        errorEmitter.emit('permission-error', permissionError);
+        setIsAdmin(false);
+      } finally {
+        setIsCheckingAdmin(false);
+      }
     };
 
     checkAdminStatus();

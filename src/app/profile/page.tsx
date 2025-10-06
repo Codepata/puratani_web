@@ -4,10 +4,11 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { useAuth, useUser } from '@/firebase';
+import { useAuth } from '@/firebase';
 import { useRouter } from 'next/navigation';
 import { Edit, LogOut, Gift, User as UserIcon } from 'lucide-react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import type { User } from 'firebase/auth';
 
 const donationHistory = [
   { id: 1, cause: 'Education for Children', amount: 50, date: '2023-10-15' },
@@ -16,15 +17,22 @@ const donationHistory = [
 ];
 
 export default function ProfilePage() {
-  const { user, isUserLoading } = useUser();
   const auth = useAuth();
+  const [user, setUser] = useState<User | null>(auth.currentUser);
+  const [isUserLoading, setIsUserLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
-    if (!isUserLoading && !user) {
-      router.push('/login');
-    }
-  }, [user, isUserLoading, router]);
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      setUser(user);
+      setIsUserLoading(false);
+      if (!user) {
+        router.push('/login');
+      }
+    });
+
+    return () => unsubscribe();
+  }, [auth, router]);
 
   const handleLogout = async () => {
     await auth.signOut();
