@@ -1,12 +1,49 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { blogPosts } from '@/lib/data';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from './ui/button';
 import { ArrowRight } from 'lucide-react';
+import type { BlogPost } from '@/lib/types';
+import { PlaceHolderImages } from '@/lib/placeholder-images';
+
+const getImage = (id: string) => {
+  const image = PlaceHolderImages.find((img) => img.id === id);
+  if (!image) {
+    return {
+      imageUrl: 'https://picsum.photos/seed/error/600/400',
+      imageHint: 'placeholder image',
+    };
+  }
+  return { imageUrl: image.imageUrl, imageHint: image.imageHint };
+};
+
+const blogPosts: BlogPost[] = [
+  {
+    id: '1',
+    title: 'The Power of Community in Driving Change',
+    date: 'October 26, 2023',
+    preview: 'Discover how local communities are coming together to create a global impact. Their stories are a testament to what we can achieve when we work as one.',
+    ...getImage('blog-1'),
+  },
+  {
+    id: '2',
+    title: 'Innovations in Green Energy',
+    date: 'October 22, 2023',
+    preview: 'We explore the latest breakthroughs in renewable energy technology and how they are shaping a sustainable future for generations to come.',
+    ...getImage('blog-2'),
+  },
+  {
+    id: '3',
+    title: 'A Day in the Life of a Volunteer',
+    date: 'October 18, 2023',
+    preview: 'Experience the rewarding journey of our volunteers. Read about their challenges, triumphs, and the people they meet along the way.',
+    ...getImage('blog-3'),
+  },
+];
+
 
 const BlogSection = () => {
-    const featuredPosts = blogPosts.slice(0, 3);
+    const featuredPosts = blogPosts;
   return (
     <section className="py-16 md:py-24 bg-background">
       <div className="container">

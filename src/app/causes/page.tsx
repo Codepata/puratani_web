@@ -1,9 +1,73 @@
-import { causes } from '@/lib/data';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
+import type { Cause } from '@/lib/types';
+import { PlaceHolderImages } from '@/lib/placeholder-images';
+
+const getImage = (id: string) => {
+  const image = PlaceHolderImages.find((img) => img.id === id);
+  if (!image) {
+    return {
+      imageUrl: 'https://picsum.photos/seed/error/600/400',
+      imageHint: 'placeholder image',
+    };
+  }
+  return { imageUrl: image.imageUrl, imageHint: image.imageHint };
+};
+
+const causes: Cause[] = [
+  {
+    id: '1',
+    title: 'Education for Underprivileged Children',
+    description: 'Help provide books and school supplies for children in rural areas.',
+    goal: 10000,
+    current: 7500,
+    ...getImage('cause-1'),
+  },
+  {
+    id: '2',
+    title: 'Reforest Our Planet',
+    description: 'Join us in planting trees to combat climate change and restore habitats.',
+    goal: 50000,
+    current: 25000,
+    ...getImage('cause-2'),
+  },
+  {
+    id: '3',
+    title: 'Healthcare for the Elderly',
+    description: 'Support senior citizens with essential medical care and support.',
+    goal: 20000,
+    current: 15000,
+    ...getImage('cause-3'),
+  },
+  {
+    id: '4',
+    title: 'Save the Stray Animals',
+    description: 'Provide shelter, food, and medical attention for stray animals.',
+    goal: 5000,
+    current: 4500,
+    ...getImage('cause-4'),
+  },
+  {
+    id: '5',
+    title: 'Clean Our Oceans',
+    description: 'Fund beach and ocean cleanup initiatives to protect marine life.',
+    goal: 15000,
+    current: 7500,
+    ...getImage('cause-5'),
+  },
+  {
+    id: '6',
+    title: 'Access to Clean Water',
+    description: 'Help build wells and water purification systems in remote communities.',
+    goal: 30000,
+    current: 28000,
+    ...getImage('cause-6'),
+  },
+];
+
 
 export default function CausesPage() {
   return (

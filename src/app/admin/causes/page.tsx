@@ -1,6 +1,5 @@
 'use client';
 import { useState } from 'react';
-import { causes as initialCauses } from '@/lib/data';
 import { Button } from '@/components/ui/button';
 import {
   Table,
@@ -24,6 +23,70 @@ import { Label } from '@/components/ui/label';
 import { Progress } from '@/components/ui/progress';
 import type { Cause } from '@/lib/types';
 import { PlusCircle, Edit, Trash } from 'lucide-react';
+import { PlaceHolderImages } from '@/lib/placeholder-images';
+
+const getImage = (id: string) => {
+  const image = PlaceHolderImages.find((img) => img.id === id);
+  if (!image) {
+    return {
+      imageUrl: 'https://picsum.photos/seed/error/600/400',
+      imageHint: 'placeholder image',
+    };
+  }
+  return { imageUrl: image.imageUrl, imageHint: image.imageHint };
+};
+
+const initialCauses: Cause[] = [
+  {
+    id: '1',
+    title: 'Education for Underprivileged Children',
+    description: 'Help provide books and school supplies for children in rural areas.',
+    goal: 10000,
+    current: 7500,
+    ...getImage('cause-1'),
+  },
+  {
+    id: '2',
+    title: 'Reforest Our Planet',
+    description: 'Join us in planting trees to combat climate change and restore habitats.',
+    goal: 50000,
+    current: 25000,
+    ...getImage('cause-2'),
+  },
+  {
+    id: '3',
+    title: 'Healthcare for the Elderly',
+    description: 'Support senior citizens with essential medical care and support.',
+    goal: 20000,
+    current: 15000,
+    ...getImage('cause-3'),
+  },
+  {
+    id: '4',
+    title: 'Save the Stray Animals',
+    description: 'Provide shelter, food, and medical attention for stray animals.',
+    goal: 5000,
+    current: 4500,
+    ...getImage('cause-4'),
+  },
+  {
+    id: '5',
+    title: 'Clean Our Oceans',
+    description: 'Fund beach and ocean cleanup initiatives to protect marine life.',
+    goal: 15000,
+    current: 7500,
+    ...getImage('cause-5'),
+  },
+  {
+    id: '6',
+    title: 'Access to Clean Water',
+    description: 'Help build wells and water purification systems in remote communities.',
+    goal: 30000,
+    current: 28000,
+    ...getImage('cause-6'),
+  },
+];
+
 
 export default function AdminCausesPage() {
   const [causes, setCauses] = useState<Cause[]>(initialCauses);
@@ -41,8 +104,8 @@ export default function AdminCausesPage() {
   };
 
   const handleSave = (formData: FormData) => {
-    const causeData = {
-      id: formData.get('id') as string,
+    const causeData: Cause = {
+      id: formData.get('id') as string || String(causes.length + 1),
       title: formData.get('title') as string,
       description: formData.get('description') as string,
       goal: Number(formData.get('goal')),
@@ -54,7 +117,7 @@ export default function AdminCausesPage() {
     if (editingCause) {
       setCauses(causes.map((c) => (c.id === editingCause.id ? causeData : c)));
     } else {
-      setCauses([{ ...causeData, id: String(causes.length + 1) }, ...causes]);
+      setCauses([causeData, ...causes]);
     }
     closeDialog();
   };

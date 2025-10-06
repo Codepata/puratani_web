@@ -1,16 +1,21 @@
 'use client';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Newspaper, HeartHandshake, Users, PlusCircle, ExternalLink } from 'lucide-react';
+import { Newspaper, HeartHandshake, Users, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
-import { useAdmin } from '@/components/admin-provider';
 import { useAuth } from '@/firebase';
-import { blogPosts } from '@/lib/data';
-import { causes } from '@/lib/data';
 
 export default function AdminDashboard() {
   const { user } = useAuth();
-  const latestPosts = blogPosts.slice(0, 3);
+  
+  // In a real app, this data would be fetched from a database
+  const blogPostsCount = 6; 
+  const causesCount = 6;
+  const latestPosts = [
+      { id: '1', title: 'The Power of Community in Driving Change', date: 'October 26, 2023' },
+      { id: '2', title: 'Innovations in Green Energy', date: 'October 22, 2023' },
+      { id: '3', title: 'A Day in the Life of a Volunteer', date: 'October 18, 2023' },
+  ];
 
   return (
     <div>
@@ -29,7 +34,7 @@ export default function AdminDashboard() {
             <CardDescription>Total number of published articles.</CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="text-4xl font-bold">{blogPosts.length}</p>
+            <p className="text-4xl font-bold">{blogPostsCount}</p>
           </CardContent>
         </Card>
         <Card>
@@ -41,7 +46,7 @@ export default function AdminDashboard() {
             <CardDescription>Total number of fundraising causes.</CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="text-4xl font-bold">{causes.length}</p>
+            <p className="text-4xl font-bold">{causesCount}</p>
           </CardContent>
         </Card>
         <Card>

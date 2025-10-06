@@ -10,15 +10,13 @@ import { Edit, LogOut, Gift, User as UserIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import type { User } from 'firebase/auth';
 
-const donationHistory = [
-  { id: 1, cause: 'Education for Children', amount: 50, date: '2023-10-15' },
-  { id: 2, cause: 'Reforest Our Planet', amount: 100, date: '2023-09-22' },
-  { id: 3, cause: 'Healthcare for the Elderly', amount: 75, date: '2023-08-05' },
+const donationHistory: any[] = [
+  // This is placeholder data. In a real application, you would fetch this from your database.
 ];
 
 export default function ProfilePage() {
   const auth = useAuth();
-  const [user, setUser] = useState<User | null>(auth.currentUser);
+  const [user, setUser] = useState<User | null>(null);
   const [isUserLoading, setIsUserLoading] = useState(true);
   const router = useRouter();
 
@@ -50,8 +48,13 @@ export default function ProfilePage() {
     );
   }
 
-  const getInitials = (name: string | null | undefined) => {
-    return name ? name.split(' ').map(n => n[0]).join('') : '';
+  const getInitials = (name: string | null | undefined): string => {
+    if (!name) return '';
+    const nameParts = name.split(' ');
+    if (nameParts.length > 1) {
+      return `${nameParts[0][0]}${nameParts[nameParts.length - 1][0]}`.toUpperCase();
+    }
+    return name.substring(0, 2).toUpperCase();
   };
   
   const formatDate = (date: Date) => {
