@@ -1,3 +1,100 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "hero-banner",
+      "description": "A group of volunteers working together happily.",
+      "imageUrl": "https://images.unsplash.com/photo-1758599668356-c8c919e24dda?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxjb21tdW5pdHklMjB2b2x1bnRlZXJ8ZW58MHx8fHwxNzU5NzQ3OTA1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "community volunteer"
+    },
+    {
+      "id": "about-us",
+      "description": "Diverse hands holding seedlings, symbolizing growth and unity.",
+      "imageUrl": "https://images.unsplash.com/photo-1749006813473-e397da7e0a78?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxncm93dGglMjB1bml0eXxlbnwwfHx8fDE3NTk3NDc5MDV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "growth unity"
+    },
+    {
+      "id": "profile-avatar",
+      "description": "A placeholder avatar for a user profile.",
+      "imageUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxwZXJzb24lMjBwb3J0cmFpdHxlbnwwfHx8fDE3NTk3NDM1MjZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "person portrait"
+    },
+    {
+      "id": "cause-1",
+      "description": "Children reading books in a library.",
+      "imageUrl": "https://images.unsplash.com/photo-1522661067900-ab829854a57f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxjaGlsZHJlbiUyMGVkdWNhdGlvbnxlbnwwfHx8fDE3NTk2NDk0MDV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "children education"
+    },
+    {
+      "id": "cause-2",
+      "description": "Person planting a tree in a sunny field.",
+      "imageUrl": "https://images.unsplash.com/photo-1679046410102-c5072c4bc29b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxlbnZpcm9ubWVudCUyMGNvbnNlcnZhdGlvbnxlbnwwfHx8fDE3NTk3NDc5MDZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "environment conservation"
+    },
+    {
+      "id": "cause-3",
+      "description": "Doctor checking an elderly patient's health.",
+      "imageUrl": "https://images.unsplash.com/photo-1549560826-4b7bfe23f37b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxoZWFsdGglMjBjYXJlfGVufDB8fHx8MTc1OTc0NzkwNXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "health care"
+    },
+    {
+      "id": "cause-4",
+      "description": "A stray dog being fed by a kind person.",
+      "imageUrl": "https://images.unsplash.com/photo-1630192145615-829c42cc0d3a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxhbmltYWwlMjB3ZWxmYXJlfGVufDB8fHx8MTc1OTc0NzkwNXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "animal welfare"
+    },
+    {
+      "id": "cause-5",
+      "description": "Volunteers cleaning up a beach.",
+      "imageUrl": "https://images.unsplash.com/photo-1618477460930-d8bffff64172?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxvY2VhbiUyMGNsZWFudXB8ZW58MHx8fHwxNzU5NzQ3OTA1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "ocean cleanup"
+    },
+    {
+      "id": "cause-6",
+      "description": "A well providing clean water to a village.",
+      "imageUrl": "https://images.unsplash.com/photo-1546531130-0f36255d9d49?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxjbGVhbiUyMHdhdGVyfGVufDB8fHx8MTc1OTY1NjU5M3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "clean water"
+    },
+    {
+      "id": "blog-1",
+      "description": "A group of smiling people from different cultures.",
+      "imageUrl": "https://images.unsplash.com/photo-1687360440101-739008e55576?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxjb21tdW5pdHklMjBkaXZlcnNpdHl8ZW58MHx8fHwxNzU5NzQ3OTA2fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "community diversity"
+    },
+    {
+      "id": "blog-2",
+      "description": "Close-up of a solar panel against a blue sky.",
+      "imageUrl": "https://images.unsplash.com/photo-1594818379496-da1e345b0ded?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxyZW5ld2FibGUlMjBlbmVyZ3l8ZW58MHx8fHwxNzU5NzA1MjMyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "renewable energy"
+    },
+    {
+      "id": "blog-3",
+      "description": "A farmer working in a lush green field.",
+      "imageUrl": "https://images.unsplash.com/photo-1557234195-bd9f290f0e4d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8c3VzdGFpbmFibGUlMjBhZ3JpY3VsdHVyZXxlbnwwfHx8fDE3NTk3NDc5MDZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "sustainable agriculture"
+    },
+    {
+      "id": "blog-4",
+      "description": "A student graduating, throwing cap in the air.",
+      "imageUrl": "https://images.unsplash.com/photo-1631131428457-3c14bdcb81d4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxzdHVkZW50JTIwZ3JhZHVhdGlvbnxlbnwwfHx8fDE3NTk2NzI1NTV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "student graduation"
+    },
+    {
+      "id": "blog-5",
+      "description": "Artists painting a colorful mural on a wall.",
+      "imageUrl": "https://images.unsplash.com/photo-1606005646546-1f57d881c151?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxwdWJsaWMlMjBhcnR8ZW58MHx8fHwxNzU5NzQ3OTA2fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "public art"
+    },
+    {
+      "id": "blog-6",
+      "description": "A modern city skyline at dusk.",
+      "imageUrl": "https://images.unsplash.com/photo-1758797957280-2c004d7173e8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHx1cmJhbiUyMGRldmVsb3BtZW50fGVufDB8fHx8MTc1OTc0NzkwNXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "urban development"
+    },
+    {
+      "id": "contact-map",
+      "description": "A map showing a location pin.",
+      "imageUrl": "https://images.unsplash.com/photo-1732724081252-a0a92895558a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxtYXAlMjBsb2NhdGlvbnxlbnwwfHx8fDE3NTk3NDc1NzZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "map location"
+    }
+  ]
 }
