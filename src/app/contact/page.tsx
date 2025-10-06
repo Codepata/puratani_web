@@ -17,7 +17,7 @@ export default function ContactPage() {
         </div>
 
         <div className="grid md:grid-cols-2 gap-12">
-          <div>
+          <div className="order-2 md:order-1">
             <Card>
               <CardHeader>
                 <CardTitle className="font-headline">Send us a Message</CardTitle>
@@ -48,7 +48,7 @@ export default function ContactPage() {
             </Card>
           </div>
 
-          <div className="space-y-8">
+          <div className="order-1 md:order-2 space-y-8">
             <h2 className="font-headline text-3xl font-bold">Contact Information</h2>
             <div className="space-y-6">
               <div className="flex items-start gap-4">
