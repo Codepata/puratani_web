@@ -1,9 +1,13 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 # puratani_web
 =======
 # Firebase Studio
 =======
+=======
+
+>>>>>>> f793035 (uninstall node and reinstall node 22 LTS version that use strapi)
 n# Firebase Studio
 >>>>>>> 919b872 (how to change node version on firebase studio)
 
